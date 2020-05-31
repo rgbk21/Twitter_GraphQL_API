@@ -1,0 +1,39 @@
+plugins {
+	id 'org.springframework.boot' version '2.3.0.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'java'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+
+	//Spring Reactive Web Dependencies Start
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+	testImplementation 'io.projectreactor:reactor-test'
+	//Spring Reactive Web Dependencies Start End
+
+	//GraphQL Dependencies Start
+	implementation 'com.graphql-java-kickstart:graphql-kickstart-spring-boot-starter-tools:6.0.0'
+	implementation 'com.graphql-java-kickstart:graphql-kickstart-spring-boot-starter-webflux:6.0.0'
+	//GraphQL Dependencies End
+
+	//https://stackoverflow.com/questions/48954087/intellij-idea-complains-cannot-resolve-spring-boot-properties-but-they-work-fine
+//	implementation 'org.springframework.boot:spring-boot-configuration-processor'
+	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+
+}
+
+test {
+	useJUnitPlatform()
+}
