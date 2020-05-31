@@ -30,7 +30,6 @@ public class GraphQLSchemaConfig {
 
         SchemaParser schemaParser = new SchemaParser();
         TypeDefinitionRegistry typeDefinitionRegistry = schemaParser.parse(schemaSource);
-
         RuntimeWiring runtimeWiring = buildWiring(graphQLDataFetchers);
         SchemaGenerator schemaGenerator = new SchemaGenerator();
         return schemaGenerator.makeExecutableSchema(typeDefinitionRegistry, runtimeWiring);
