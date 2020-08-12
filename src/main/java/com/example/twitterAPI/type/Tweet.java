@@ -1,5 +1,6 @@
 package com.example.twitterAPI.type;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 public class Tweet {
@@ -66,5 +67,16 @@ public class Tweet {
     @Override
     public int hashCode() {
         return Objects.hashCode(author_id, created_at, id, in_reply_to_user_id, text);
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("author_id", author_id)
+                .add("created_at", created_at)
+                .add("in_reply_to_user_id", in_reply_to_user_id)
+                .add("text", text)
+                .toString();
     }
 }

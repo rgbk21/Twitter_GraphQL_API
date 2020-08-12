@@ -39,6 +39,8 @@ public class GraphQLSchemaConfig {
         return RuntimeWiring.newRuntimeWiring()
                 .type(newTypeWiring("Query")
                         .dataFetcher("getTweetById", graphQLDataFetchers.getTweetByIdDataFetcher()))
+                .type(newTypeWiring("Query")
+                        .dataFetcher("getTweetsFromUser", graphQLDataFetchers.getTweetsFromUserDataFetcher()))
                 .type(newTypeWiring("Book")
                         .dataFetcher("author", graphQLDataFetchers.getAuthorDataFetcher()))
                 .build();

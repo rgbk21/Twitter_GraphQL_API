@@ -4,6 +4,7 @@ import com.example.twitterAPI.type.Tweet;
 import com.google.common.collect.ImmutableMap;
 import graphql.execution.DataFetcherResult;
 import graphql.schema.DataFetcher;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -11,11 +12,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import twitter4j.Paging;
+import twitter4j.Status;
+import twitter4j.Twitter;
 
 import java.util.*;
 
 @Component
 public class GraphQLDataFetchers {
+
+    @Autowired
+    private Twitter twitter;
 
     private static List<Map<String, String>> books = Arrays.asList(
             ImmutableMap.of("id", "book-1",
@@ -51,20 +58,43 @@ public class GraphQLDataFetchers {
             String tweetId;
             if (tweetIds != null && !tweetIds.isEmpty()) tweetId = tweetIds.get(0);
 
-            //create a HTTP Request to send to the twitter server using WebFlux
-            WebClient client = WebClient
-                    .builder()
-                    .baseUrl("https://api.twitter.com/labs")
-                    .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                    .build();
-
-            Mono<ClientResponse> tweet = client.method(HttpMethod.GET)
-                    .uri("/1/tweets?ids=1138505981460193280")
-                    .exchange();
 
             //This example is from user-context
             Map<String, Tweet> someMap = new HashMap<>();
             return DataFetcherResult.newResult().data(tweetIds).localContext(someMap).build();
+
+        };
+    }
+
+    public DataFetcher getTweetsFromUserDataFetcher() {
+        return env -> {
+
+            Object userHandleArg = env.getArgument("userHandle");
+            String userHandle = (String) userHandleArg;
+
+            Object numOfTweetsToFetchArg = env.getArgument("numOfTweets");
+            int numOfTweetsToFetch = Integer.parseInt((String)numOfTweetsToFetchArg) ;
+
+            List<Status> statuses = new ArrayList<>();
+            Paging page = new Paging(1, 10);
+            page.setPage(1);
+            statuses.addAll(twitter.getUserTimeline(userHandle, page));
+
+            List<Tweet> allUserTweets = new ArrayList<>();
+            for (Status status : statuses) {
+
+                Tweet tweet = new Tweet();
+                tweet.setId(Long.toString(status.getId()));
+                tweet.setAuthor_id(status.getUser().getName());
+                tweet.setCreated_at(status.getCreatedAt().toString());
+                tweet.setIn_reply_to_user_id(status.getInReplyToScreenName());
+                tweet.setText(status.getText());
+
+                allUserTweets.add(tweet);
+            }
+
+            //This example is from user-context
+            return DataFetcherResult.newResult().data(allUserTweets).build();
 
         };
     }

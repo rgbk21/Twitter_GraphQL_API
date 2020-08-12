@@ -1,5 +1,6 @@
 type Query {
     getTweetById(tweetId: [String]): [Tweet]
+    getTweetsFromUser(userHandle: String, numOfTweets: String): [Tweet]
 }
 
 type Tweet {
