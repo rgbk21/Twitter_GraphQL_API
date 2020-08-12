@@ -63,9 +63,8 @@ dependencies {
 
 
 	//https://stackoverflow.com/questions/48954087/intellij-idea-complains-cannot-resolve-spring-boot-properties-but-they-work-fine
-//	implementation 'org.springframework.boot:spring-boot-configuration-processor'
+	//	implementation 'org.springframework.boot:spring-boot-configuration-processor'
 	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-
 
 }
 
