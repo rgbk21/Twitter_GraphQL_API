@@ -1,12 +1,18 @@
 package com.example.twitterAPI;
 
+import com.example.twitterAPI.type.Tweet;
 import com.google.common.collect.ImmutableMap;
+import graphql.execution.DataFetcherResult;
 import graphql.schema.DataFetcher;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.ClientResponse;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class GraphQLDataFetchers {
@@ -38,14 +44,28 @@ public class GraphQLDataFetchers {
                     "lastName", "Rice")
     );
 
-    public DataFetcher getBookByIdDataFetcher() {
-        return dataFetchingEnvironment -> {
-            String bookId = dataFetchingEnvironment.getArgument("id");
-            return books
-                    .stream()
-                    .filter(book -> book.get("id").equals(bookId))
-                    .findFirst()
-                    .orElse(null);
+    public DataFetcher getTweetByIdDataFetcher() {
+        return env -> {
+            Object rawTweetIds = env.getArgument("tweetId");
+            List<String> tweetIds = (List<String>) rawTweetIds;
+            String tweetId;
+            if (tweetIds != null && !tweetIds.isEmpty()) tweetId = tweetIds.get(0);
+
+            //create a HTTP Request to send to the twitter server using WebFlux
+            WebClient client = WebClient
+                    .builder()
+                    .baseUrl("https://api.twitter.com/labs")
+                    .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                    .build();
+
+            Mono<ClientResponse> tweet = client.method(HttpMethod.GET)
+                    .uri("/1/tweets?ids=1138505981460193280")
+                    .exchange();
+
+            //This example is from user-context
+            Map<String, Tweet> someMap = new HashMap<>();
+            return DataFetcherResult.newResult().data(tweetIds).localContext(someMap).build();
+
         };
     }
 

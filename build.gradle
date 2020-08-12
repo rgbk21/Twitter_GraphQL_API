@@ -25,6 +25,7 @@ idea{
 configurations{
 	all{
 		exclude module: 'spring-boot-starter-web'
+		exclude group: 'org.springframework', module: 'spring-webmvc'
 	}
 }
 
@@ -32,9 +33,9 @@ dependencies {
 
 	//Spring Reactive Web Dependencies Start
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+	testImplementation('org.springframework.boot:spring-boot-starter-test') /*{
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-	}
+	}*/
 	testImplementation 'io.projectreactor:reactor-test'
 	//Spring Reactive Web Dependencies Start End
 
@@ -45,8 +46,8 @@ dependencies {
 	//https://www.graphql-java-kickstart.com/spring-boot/getting-started/
 	compile 'com.graphql-java-kickstart:graphql-spring-boot-starter:7.0.1'
 	testCompile 'com.graphql-java-kickstart:graphql-spring-boot-starter-test:7.0.1'
-	compile 'com.graphql-java-kickstart:graphiql-spring-boot-starter:7.0.1' //commented for now because we are using playground
-	compile 'com.graphql-java-kickstart:voyager-spring-boot-starter:7.0.1' 	//commented for now because we are using playground
+	compile 'com.graphql-java-kickstart:graphiql-spring-boot-starter:7.0.1'
+	compile 'com.graphql-java-kickstart:voyager-spring-boot-starter:7.0.1'
 	//GraphQL Dependencies End
 
 	//Playground
@@ -55,8 +56,9 @@ dependencies {
 	// https://mvnrepository.com/artifact/com.google.guava/guava
 	compile group: 'com.google.guava', name: 'guava', version: '19.0'
 
-
-
+	//Twitter API
+	// https://mvnrepository.com/artifact/org.twitter4j/twitter4j-core
+	compile group: 'org.twitter4j', name: 'twitter4j-core', version: '4.0.7'
 
 
 

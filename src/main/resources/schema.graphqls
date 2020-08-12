@@ -1,12 +1,13 @@
 type Query {
-    bookById(id: ID): Book
+    getTweetById(tweetId: [String]): [Tweet]
 }
 
-type Book {
-    id: ID
-    name: String
-    pageCount: Int
-    author: Author
+type Tweet {
+    id: String
+    author_id: String
+    created_at: String
+    in_reply_to_user_id: String
+    text: String
 }
 
 type Author {
